@@ -5,18 +5,18 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from collections import Counter
 
-ProjectDir="/home/lab-xiong.jiangfeng/Projects/satellite_seg"
+ProjectDir="/home/rt/satellite_seg"
 
 def get_color_labels():
 	return np.asarray([[0,0,0], [128,0,0], [0,128,0], [128,128,0], [0,0,128],[255,255,255]])
 
 def encode_segmap(mask):
 	mask = mask.astype(int)
-        label_mask = np.zeros((mask.shape[0], mask.shape[1]), dtype=np.int16)
-        for i, label in enumerate(get_color_labels()):
-            label_mask[np.where(np.all(mask == label, axis=-1))[:2]] = i
-        label_mask = label_mask.astype(int)
-        return label_mask
+	label_mask = np.zeros((mask.shape[0], mask.shape[1]), dtype=np.int16)
+	for i, label in enumerate(get_color_labels()):
+		label_mask[np.where(np.all(mask == label, axis=-1))[:2]] = i
+	label_mask = label_mask.astype(int)
+	return label_mask
 
 def auto_stride(patch_label):
 #x0:x1:x2:x3:x4
@@ -33,7 +33,7 @@ def auto_stride(patch_label):
 	elif(most_count_label==4):
 		stride = 32
 	else:
-		print "Unknown label"
+		print("Unknown label")
 	return stride
 
 def segmap(mask):
@@ -43,7 +43,7 @@ def segmap(mask):
 	b = mask.copy()
 	for l in range(0, label_colours.shape[0]):
 		r[mask == l] = label_colours[l, 0]
- 		g[mask == l] = label_colours[l, 1]
+		g[mask == l] = label_colours[l, 1]
 		b[mask == l] = label_colours[l, 2]
 
 		rgb = np.zeros((mask.shape[0], mask.shape[1], 3),dtype=np.uint8)
@@ -73,7 +73,7 @@ def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_
 			y1 = y0
 			y2 = y1 +crop_size_h
 
-			print x1,y1,x2,y2
+			print(x1,y1,x2,y2)
 
 			if(x2>w or y2>h):
 				x2 = min(x2,w)
@@ -112,15 +112,15 @@ def generate_trainval_list(pathdir):
 		label = io.imread(os.path.join(pathdir,'label',labels_img_path))
 		most_count_label= np.argmax(np.bincount(label.flatten().tolist()))
 		labels_count_list[labels_img_path] = most_count_label
-	values= labels_count_list.values()
+	values= list(labels_count_list.values())
 	count_dict= Counter(values)
-	print count_dict
+	print(count_dict)
 
 
 def write_train_list(pathdir):
 	labels_img_paths = os.listdir(os.path.join(pathdir,'label'))
 	num_sets = len(labels_img_paths)
-	indexs = range(num_sets)
+	indexs = list(range(num_sets))
 	np.random.shuffle(indexs)
 	train_set_num = 0.95 * num_sets
 	train_f = open(os.path.join(pathdir,'train.txt'),'w')
@@ -128,10 +128,10 @@ def write_train_list(pathdir):
 	trainval_f = open(os.path.join(pathdir,'trainval.txt'),'w')
 	for index in range(num_sets):
 		if(index<train_set_num):
-			print >>train_f,labels_img_paths[indexs[index]]
+			print(labels_img_paths[indexs[index]], file=train_f)
 		else:
-			print >>val_f,labels_img_paths[indexs[index]]
-		print >>trainval_f,labels_img_paths[indexs[index]]
+			print(labels_img_paths[indexs[index]], file=val_f)
+		print(labels_img_paths[indexs[index]], file=trainval_f)
 	train_f.close()
 	val_f.close()
 	trainval_f.close()

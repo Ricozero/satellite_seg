@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-import extractors
+import models.extractors
 
 
 class PSPModule(nn.Module):
@@ -79,5 +79,4 @@ class PSPNet(nn.Module):
         final = self.final(p)
         #bin_cls = F.adaptive_max_pool2d(input=class_f, output_size=(1, 1)).view(-1, class_f.size(1))
 
-	return final
-    
+        return final

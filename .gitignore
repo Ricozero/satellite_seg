@@ -1,3 +1,6 @@
 *.png
 *.pkl
 *.pyc
+
+.vscode
+dataset

@@ -1,8 +1,8 @@
 import torchvision.models as models
 
-from fcn import *
-from segnet import *
-from pspnet import PSPNet
+from models.fcn import *
+from models.segnet import *
+from models.pspnet import PSPNet
 
 psp_models = {
     'squeezenet': lambda: PSPNet(sizes=(1, 2, 3, 6), psp_size=512, deep_features_size=256, backend='squeezenet'),
