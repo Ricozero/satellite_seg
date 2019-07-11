@@ -63,33 +63,33 @@ label_crf_list_2=[os.path.join(training_data_stage2_dir,'1_class_crf.png'),
 
 #dataset s2
 stat=generate_stat(label_list_2)
-print "dataset s2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)])
+print("dataset s2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
 dataset_dir=os.path.join(ProjectDir,"dataset/stage2-train")
 if(not os.path.exists(dataset_dir)):
 	os.mkdir(dataset_dir)
 	generate_dataset(dataset_dir,320,img_list_2,label_list_2)
-	print "create dataset s2..."
+	print("create dataset s2...")
 else:
-	print "dataset s2 exists, pass!"
+	print("dataset s2 exists, pass!")
 
 #dataset s1s2
 stat=generate_stat(label_list_1+label_list_2)
-print "stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)])
-dataset_dir=os.path.join(ProjectDir,"dataset/stage1&stage2-train")
+print("stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
+dataset_dir=os.path.join(ProjectDir,"dataset/stage1-stage2-train")
 if(not os.path.exists(dataset_dir)):
 	os.mkdir(dataset_dir)
-	print "create dataset s1s2..."
+	print("create dataset s1s2...")
 	generate_dataset(dataset_dir,320,img_list_1+img_list_2,label_list_1+label_list_2)
 else:
-	print "dataset s1s2 exists, pass!"
+	print("dataset s1s2 exists, pass!")
 
 #dataset s1s2-crf
 stat=generate_stat(label_list_1+label_crf_list_2)
-print "crf2 stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)])
-dataset_dir=os.path.join(ProjectDir,"dataset/stage1&stage2-train-crf2") #[4 4 6 1 1]
+print("crf2 stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
+dataset_dir=os.path.join(ProjectDir,"dataset/stage1-stage2-train-crf2") #[4 4 6 1 1]
 if(not os.path.exists(dataset_dir)):
 	os.mkdir(dataset_dir)
-	print "create dataset s1s2-crf2..."
+	print("create dataset s1s2-crf2...")
 	generate_dataset(dataset_dir,320,img_list_1+img_list_2,label_list_1+label_crf_list_2)#{0: 654, 2: 568, 1: 499, 4: 91, 3: 68})
 else:
-	print "dataset s1s2-crf2 exists, pass!"
+	print("dataset s1s2-crf2 exists, pass!")

@@ -56,8 +56,8 @@ def save_visual_gt(save_dir,mask,prefix,index):
 	io.imsave(os.path.join(save_dir,prefix+"_%05d.png"%(index)),color_mask)
 
 def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_label=False):
-	raw_img = io.imread(image_path,dtype=np.uint8)
-	raw_img_class = io.imread(img_class_path,dtpe=np.uint8)
+	raw_img = io.imread(image_path)
+	raw_img_class = io.imread(img_class_path)
 	h,w = raw_img.shape[0],raw_img.shape[1]
 	#stride_h = 15
 	#stride_w = 15

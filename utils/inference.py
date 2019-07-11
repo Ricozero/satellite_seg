@@ -60,7 +60,7 @@ colorize[:,2] = (colors & 0xFF0000) >> 16
 # We subtract one because the number shouldn't include the value 0 which stands
 # for "unknown" or "unsure".
 n_labels = len(set(labels.flat)) - int(HAS_UNK)
-print(n_labels, " labels", (" plus \"unknown\" 0: " if HAS_UNK else ""), set(labels.flat))
+print((n_labels, " labels", (" plus \"unknown\" 0: " if HAS_UNK else ""), set(labels.flat)))
 
 ###########################
 ### Setup the CRF model ###

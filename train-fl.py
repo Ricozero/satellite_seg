@@ -42,14 +42,14 @@ def poly_lr_scheduler(optimizer, init_lr, iter, lr_decay_iter=1, max_iter=15000,
     for param_group in optimizer.param_groups:
          param_group['lr'] = lr
 
-    print "iteration %d with learning rate: %f"%(iter,lr)
+    print("iteration %d with learning rate: %f"%(iter,lr))
 
 
 def adjust_learning_rate(optimizer, init_lr, epoch,step):
     lr = init_lr * (0.1 ** (epoch // step))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
-    print "epoch %d with learning rate: %f"%(epoch,lr)
+    print("epoch %d with learning rate: %f"%(epoch,lr))
 
 def validate(model,valloader,n_class):
     losses = AverageMeter()
@@ -59,8 +59,8 @@ def validate(model,valloader,n_class):
         images = Variable(images.cuda())
         labels = Variable(labels.cuda())
         outputs = model(images)
-	if(isinstance(outputs,tuple)):
-		outputs = outputs[0]
+    if(isinstance(outputs,tuple)):
+        outputs = outputs[0]
 
         loss = cross_entropy2d(outputs, labels)
         losses.update(loss.data[0],images.size(0))
@@ -75,7 +75,7 @@ def validate(model,valloader,n_class):
     score = scores(gts, preds, n_class=n_class)
 
     for i in range(n_class):
-        print i, score['Class Acc'][i]
+        print(i, score['Class Acc'][i])
     return losses.avg,score['Overall Acc']
 
 def train(args):
@@ -115,7 +115,7 @@ def train(args):
         state_dict = torch.load(args.snapshot).state_dict()
         from collections import OrderedDict
         new_state_dict = OrderedDict()
-        for k,v in state_dict.items():
+        for k,v in list(state_dict.items()):
             name =k[7:] #remove moudle
             new_state_dict[name] = v
         model.load_state_dict(new_state_dict)
@@ -158,7 +158,7 @@ def train(args):
                  win=loss_window,
                  update='append')
 
-        print("Epoch [%d/%d] iteration: %d with Loss: %.4f" % (epoch+1, args.n_epoch, iter+1, loss.data[0]))
+        print(("Epoch [%d/%d] iteration: %d with Loss: %.4f" % (epoch+1, args.n_epoch, iter+1, loss.data[0])))
 
         #validation
         loss,acc = validate(model,VALDataLoader,n_classes)
