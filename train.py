@@ -96,7 +96,7 @@ def train(args):
     valloader = CCFLoader(args.traindir, split='val', is_transform=True, img_size=(
         args.img_rows, args.img_cols))
     VALDataLoader = data.DataLoader(
-        valloader, batch_size=4, num_workers=4, shuffle=False)
+        valloader, batch_size=4, num_workers=0, shuffle=False)
 
     # Setup visdom for visualization
     vis = visdom.Visdom()
@@ -171,7 +171,7 @@ def train(args):
                 update='append')
 
         print("Epoch [%d/%d] iteration: %d with Loss: %.4f" %
-               (epoch+1, args.n_epoch, iter+1, loss))
+              (epoch+1, args.n_epoch, iter+1, loss))
 
         # validation
         loss, acc = validate(model, VALDataLoader, n_classes)

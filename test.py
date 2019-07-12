@@ -3,8 +3,9 @@ import torch
 import visdom
 import argparse
 import numpy as np
-import scipy.misc as misc
-import torchvision.models as models
+from scipy import misc
+import imageio
+from torchvision import models
 import os
 
 from torch.autograd import Variable
@@ -74,9 +75,9 @@ def process_single_scale(args,model,crop_scale):
     batch_size = args.batch_size
     stride = args.stride
 
-    print "Read Input Image from : {}".format(args.img_path)
-    print "Processing scale: ", crop_scale
-    img = misc.imread(args.img_path)
+    print("Read Input Image from : {}".format(args.img_path))
+    print("Processing scale: ", crop_scale)
+    img = imageio.imread(args.img_path)
     n_classes = 5
     h,w = img.shape[0],img.shape[1]
 
@@ -85,15 +86,13 @@ def process_single_scale(args,model,crop_scale):
     labels_per_pixel_list=[[] for i in range(new_w*new_h)]
 
     pad_image = np.zeros((new_h,new_w,3),np.uint8)
-    num_cols = (new_w-crop_scale)/stride + 1
-    num_rows = (new_h-crop_scale)/stride + 1
+    num_cols = (new_w-crop_scale)//stride + 1
+    num_rows = (new_h-crop_scale)//stride + 1
     pad_image[:h,:w] = img.copy()
-
     batch_index = 0
-    
     patches=[[],[]]
 
-    for i in tqdm(range(num_rows)):
+    for i in tqdm(list(range(num_rows))):
         x1=0
         y1 = i*stride
         y2 = y1 + crop_scale
@@ -117,7 +116,7 @@ def process_single_scale(args,model,crop_scale):
                 process_batch(patches,model,labels_per_pixel_list,new_w)
                 patches=[[],[]]
 
-    for index in tqdm(range(new_w*new_h)):
+    for index in tqdm(list(range(new_w*new_h))):
         most_count_label = np.argmax(np.bincount(labels_per_pixel_list[index]))
         if(replace_background):
             if(most_count_label==0):
@@ -138,7 +137,7 @@ def test_large_img(args):
     state_dict = torch.load(args.model_path).state_dict()
     from collections import OrderedDict
     new_state_dict = OrderedDict()
-    for k,v in state_dict.items():
+    for k,v in list(state_dict.items()):
         name =k[7:] #remove moudle
         new_state_dict[name] = v
     model.load_state_dict(new_state_dict)
@@ -153,7 +152,7 @@ def test_large_img(args):
         pred_labels_list.append(pred_labels_single)
         color_mask = segmap(pred_labels_single)
         test_id = os.path.basename(args.img_path)[0]
-        misc.imsave(os.path.join(args.tempdir,"%s_temp_scale_%d.png"%(test_id,crop_scale)),color_mask)
+        imageio.imsave(os.path.join(args.tempdir,"%s_temp_scale_%d.png"%(test_id,crop_scale)),color_mask)
 
     if(len(args.crop_scales)==1):
         pred_labels = pred_labels_list[0]
@@ -168,40 +167,40 @@ def test_large_img(args):
                 average_map[i][j] = most_label
         pred_labels = average_map
 
-    misc.imsave(args.out_path,np.asarray(pred_labels,dtype=np.uint8))
+    imageio.imsave(args.out_path,np.asarray(pred_labels,dtype=np.uint8))
     color_mask = segmap(pred_labels)
-    misc.imsave(args.vis_out_path,color_mask)
+    imageio.imsave(args.vis_out_path,color_mask)
 
     if(args.img_label_path!=None):
-        gts = misc.imread(args.img_label_path)
+        gts = imageio.imread(args.img_label_path)
         score, class_iou = scores(gts, pred_labels, n_class=n_classes)
 
-        for k, v in score.items():
-            print k, v
+        for k, v in list(score.items()):
+            print(k, v)
 
         for i in range(n_classes):
-            print i, class_iou[i]
+            print(i, class_iou[i])
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
-    parser.add_argument('--model_path', nargs='?', type=str, default=None, 
+    parser.add_argument('--model_path', nargs='?', type=str, default=None,
                         help='Path to the saved model')
-    parser.add_argument('--dataset', nargs='?', type=str, default='pascal', 
+    parser.add_argument('--dataset', nargs='?', type=str, default='pascal',
                         help='Dataset to use [\'pascal, camvid, ade20k etc\']')
-    parser.add_argument('--img_path', nargs='?', type=str, default=None, 
+    parser.add_argument('--img_path', nargs='?', type=str, default=None,
                         help='Path of the input image')
-    parser.add_argument('--out_path', nargs='?', type=str, default=None, 
+    parser.add_argument('--out_path', nargs='?', type=str, default=None,
                         help='Path of the output segmap')
-    parser.add_argument('--vis_out_path', nargs='?', type=str, default=None, 
+    parser.add_argument('--vis_out_path', nargs='?', type=str, default=None,
                         help='visulization of the output segmap')
-    parser.add_argument('--img_label_path',nargs='?', type=str, default=None, 
+    parser.add_argument('--img_label_path',nargs='?', type=str, default=None,
                         help='Segmentation label')
     parser.add_argument('--gpu',nargs='*', type=int, default=0,
                         help='GPUIDS')
-    parser.add_argument('--stride',nargs='?', type=int, default=50, 
+    parser.add_argument('--stride',nargs='?', type=int, default=50,
                         help='stride of crop')
-    parser.add_argument('--batch_size',nargs='?', type=int, default=32, 
+    parser.add_argument('--batch_size',nargs='?', type=int, default=32,
                         help='batch_size of test images')
     parser.add_argument('--crop_scales',nargs='*', type=int, default=[192,224,256],
                         help='crop_scales of input image')
