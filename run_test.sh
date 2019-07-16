@@ -13,9 +13,9 @@ do
 	for j in $(seq 1 3)
 	do
 		test_img=dataset/CCF-testing-Semi/${j}.png
-		let index=${j}-1 
+		let index=${j}-1
 		if [ -f  ${save_dir}/test_${j}_pred.png ] ;then
-			echo ${save_dir}/test_${j}_pred.png 
+			echo ${save_dir}/test_${j}_pred.png
 			echo "file exists"
 			continue
 		fi

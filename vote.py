@@ -6,18 +6,19 @@ from tqdm import tqdm
 from utils.preprocess import encode_segmap,segmap
 import sys,os
 import argparse
+
 def vote_per_image(args):
 	imgs=[]
 	for imgpath in args.inputs:
 		if(not os.path.exists(imgpath)):
-			print "Path not exists: ",imgpath
+			print("Path not exists: ",imgpath)
 		img = io.imread(imgpath)
 		if(int(args.vote_vis)):
 			img = encode_segmap(img)
 		imgs.append(img)
 	vote_map = np.zeros_like(imgs[0])
 	num_files = len(args.inputs)
-	for i in tqdm(range(vote_map.shape[0])):
+	for i in tqdm(list(range(vote_map.shape[0]))):
 		for j in range(vote_map.shape[1]):
 			pre_list=[]
 			for index in range(num_files):
@@ -38,8 +39,8 @@ def vote_per_image(args):
 			if(args.road_first and np.count_nonzero(pre_list==args.cls_index)>0):
 				vote_map[i][j] = args.cls_index
 
-   	color_mask = segmap(vote_map)
-   	return vote_map,color_mask
+	color_mask = segmap(vote_map)
+	return vote_map,color_mask
 
 
 if __name__=='__main__':
@@ -53,7 +54,7 @@ if __name__=='__main__':
 	parser.add_argument('--road_first',nargs='?',type=int,default=0)
 	parser.add_argument('--cls_index',nargs='?',type=int,default=0)
 	args = parser.parse_args()
-	print args.inputs
+	print(args.inputs)
 
 	output_name=args.output
 	vote_map,color_mask = vote_per_image(args)
