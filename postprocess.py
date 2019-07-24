@@ -21,19 +21,38 @@ def label2edge(img, diffuse):
                 y + 1 < img.shape[1] and img[x][y] != img[x][y + 1] or
                 x - 1 >= 0 and img[x][y] != img[x - 1][y] or
                 x + 1 < img.shape[0] and img[x][y] != img[x + 1][y]):
+
                 edge_img[x][y] = img[x][y]
 
                 # 标记为边缘的像素向外扩散diffuse个像素（围绕一圈，形成正方形）
                 # 仅扩散到同色的像素
-                # 考虑一圈都没有扩散之后，后面不再扩散
-                for i in range(0, diffuse):
-                    
-
+                # TODO:一圈都没有扩散之后，后面不再扩散，防止扩散到另一种颜色之外
+                for layer in range(1, diffuse + 1):
+                    # 上（包括左上角和右上角）
+                    if y - layer >= 0:
+                        for i in range(x - layer, x + layer + 1):
+                            if i >= 0 and i < img.shape[0] and img[x][y] == img[i][y - layer]:
+                                edge_img[i][y - layer] = img[x][y]
+                    # 下（包括左下角和右下角）
+                    if y + layer < img.shape[1]:
+                        for i in range(x - layer, x + layer + 1):
+                            if i >= 0 and i < img.shape[0] and img[x][y] == img[i][y + layer]:
+                                edge_img[i][y + layer] = img[x][y]
+                    # 左
+                    if x - layer >= 0:
+                        for j in range(y - layer + 1, y + layer):
+                            if j >= 0 and j < img.shape[1] and img[x][y] == img[x - layer][j]:
+                                edge_img[x - layer][j] = img[x][y]
+                    # 右
+                    if x + layer < img.shape[0]:
+                        for j in range(y - layer + 1, y + layer):
+                            if j >= 0 and j < img.shape[1] and img[x][y] == img[x + layer][j]:
+                                edge_img[x + layer][j] = img[x][y]
     return edge_img
 
-def find_label_edge(filename):
+def find_label_edge(filename, diffuse):
     labels = io.imread(filename)
-    e = label2edge(labels)
+    e = label2edge(labels, diffuse)
     io.imshow(e)
 
     pos = filename.rfind('.')
@@ -47,4 +66,4 @@ def find_label_edge(filename):
     io.imsave(efn, e)
     save_gt_vis(efn, evfn)
 
-find_label_edge('results/test_small.png')
+find_label_edge('results/test.png', 5)
