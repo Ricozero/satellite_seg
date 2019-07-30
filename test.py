@@ -25,7 +25,7 @@ exclude_background = False
 def img_transform(img,input_size):
     img = img[:, :, ::-1]
     img = img.astype(np.float64)
-    img = misc.imresize(img, (input_size, input_size))
+    img = transform.resize(img, (input_size, input_size))
     img = img.astype(float) / 255.0
     mean = np.array([0.485, 0.456, 0.406])
     std = np.array([0.229,0.224,0.225])
@@ -142,7 +142,7 @@ def test_large_img(args):
         new_state_dict[name] = v
     model.load_state_dict(new_state_dict)
     model = DataParallel(model.cuda(),device_ids=[i for i in range(len(args.gpu))])
-    
+
     model.cuda()
     model.eval()
 
@@ -151,8 +151,9 @@ def test_large_img(args):
         pred_labels_single = process_single_scale(args,model,crop_scale)
         pred_labels_list.append(pred_labels_single)
         color_mask = segmap(pred_labels_single)
-        test_id = os.path.basename(args.img_path)[0]
-        imageio.imsave(os.path.join(args.tempdir,"%s_temp_scale_%d.png"%(test_id,crop_scale)),color_mask)
+        test_filename = os.path.basename(args.img_path)
+        test_filename = test_filename[0:test_filename.rfind('.')]
+        imageio.imsave(os.path.join(args.tempdir,"%s_temp_scale_%d.png"%(test_filename,crop_scale)),color_mask)
 
     if(len(args.crop_scales)==1):
         pred_labels = pred_labels_list[0]
