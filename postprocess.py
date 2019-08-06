@@ -1,4 +1,5 @@
 from skimage import io
+from skimage import measure
 import numpy as np
 
 from utils.preprocess import save_gt_vis
@@ -50,9 +51,12 @@ def label2edge(img, diffuse):
                                 edge_img[x + layer][j] = img[x][y]
     return edge_img
 
+def label2poly(img, level):
+    return measure.find_contours(img, level)
+
 def find_label_edge(filename, diffuse):
-    labels = io.imread(filename)
-    e = label2edge(labels, diffuse)
+    img = io.imread(filename)
+    e = label2edge(img, diffuse)
     io.imshow(e)
 
     pos = filename.rfind('.')
@@ -60,10 +64,30 @@ def find_label_edge(filename, diffuse):
         efn = filename + '_edge'        # edge file name
         evfn = filename + '_edge_vis'   # edge visualised file name
     else:
-        efn = filename[0:pos] + '_edge' + filename[pos:]
-        evfn = filename[0:pos] + '_edge_vis' + filename[pos:]
+        efn = filename[0:pos] + '_edge.png'
+        evfn = filename[0:pos] + '_edge_vis.png'
 
     io.imsave(efn, e)
     save_gt_vis(efn, evfn)
 
-find_label_edge('results/test.png', 5)
+def find_label_poly(filename):
+    img = io.imread(filename)
+
+    pos = filename.rfind('.')
+    if pos == -1:
+        pvfn = filename + '_poly_vis'   # polygon visualised file name
+    else:
+        pvfn = filename[0:pos] + '_poly_vis'
+
+    for level in range(1, 5):
+        simg = np.zeros_like(img)   # image with single label(binary value)
+        simg[img == level] = 1
+        pl = label2poly(simg, 0.5)  # polygon list
+        poly_img = np.zeros_like(img)
+        for poly in pl:
+            for vertex in poly:
+                poly_img[int(vertex[0])][int(vertex[1])] = 255
+        io.imsave(pvfn + '_' + str(level) + '.png', poly_img)
+
+#find_label_edge('results/DSC00132_pred_256.png', 5)
+find_label_poly('results/test.png')
