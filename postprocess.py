@@ -1,6 +1,7 @@
 from skimage import io
 from skimage import measure
 import numpy as np
+import json
 
 from utils.preprocess import save_gt_vis
 
@@ -52,6 +53,7 @@ def label2edge(img, diffuse):
     return edge_img
 
 def label2poly(img, level):
+    # Marching Squares algorithm
     return measure.find_contours(img, level)
 
 def find_label_edge(filename, diffuse):
@@ -75,19 +77,30 @@ def find_label_poly(filename):
 
     pos = filename.rfind('.')
     if pos == -1:
-        pvfn = filename + '_poly_vis'   # polygon visualised file name
+        pfn = filename + '_poly'
     else:
-        pvfn = filename[0:pos] + '_poly_vis'
+        pfn = filename[0:pos] + '_poly'
+    pvfn = pfn + '_vis' # polygon visualised file name
 
     for level in range(1, 5):
         simg = np.zeros_like(img)   # image with single label(binary value)
         simg[img == level] = 1
         pl = label2poly(simg, 0.5)  # polygon list
+
+        # output image file
         poly_img = np.zeros_like(img)
         for poly in pl:
             for vertex in poly:
                 poly_img[int(vertex[0])][int(vertex[1])] = 255
         io.imsave(pvfn + '_' + str(level) + '.png', poly_img)
+
+        # output json file
+        pl2 = []
+        for l in pl:
+            pl2.append(l.tolist())
+        text = json.dumps(pl2)
+        with open(pfn + '_' + str(level) + '.json', 'w') as f:
+            f.write(text)
 
 #find_label_edge('results/DSC00132_pred_256.png', 5)
 find_label_poly('results/test.png')
