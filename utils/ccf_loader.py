@@ -4,8 +4,8 @@ import json
 import torch
 import torchvision
 import numpy as np
-import scipy.misc as m
-import scipy.io as io
+from PIL import Image
+import skimage.io as io
 import matplotlib.pyplot as plt
 import random
 from skimage.transform import rotate
@@ -38,10 +38,10 @@ class CCFLoader(data.Dataset):
         img_path = self.root + '/img/' + img_name
         lbl_path = self.root + '/label/' + img_name
 
-        img = m.imread(img_path)
+        img = io.imread(img_path)
         img = np.array(img, dtype=np.uint8)
 
-        lbl = m.imread(lbl_path)
+        lbl = io.imread(lbl_path)
         lbl = np.array(lbl, dtype=np.int32)
 
         if self.is_transform:
@@ -103,7 +103,7 @@ class CCFLoader(data.Dataset):
                 lbl = np.flip(lbl,axis=1)
                 #print "horizontally flip"
 
-        img = m.imresize(img, (self.img_size[0], self.img_size[1]))
+        img = np.array(Image.fromarray(np.uint8(img)).resize((self.img_size[0], self.img_size[1])))
         img = img.astype(float) / 255.0
         img -= self.mean
         img = img/self.std
@@ -112,7 +112,7 @@ class CCFLoader(data.Dataset):
 
 
         lbl = lbl.astype(float)
-        lbl = m.imresize(lbl, (self.img_size[0], self.img_size[1]), 'nearest', mode='F')
+        lbl = np.array(Image.fromarray(np.uint8(lbl)).resize((self.img_size[0], self.img_size[1])))
         
 
         lbl = lbl.astype(int)

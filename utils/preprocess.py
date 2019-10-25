@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from collections import Counter
 
-ProjectDir="/home/rt/satellite_seg"
+ProjectDir="/root/satellite_seg"
 
 def get_color_labels():
 	return np.asarray([[0,0,0], [128,0,0], [0,128,0], [128,128,0], [0,0,128],[255,255,255]])
