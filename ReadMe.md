@@ -1,7 +1,7 @@
 # CCF BCDI2017 卫星影像的AI分类与识别 线上Top1部分代码
 
 # 运行环境
-python版本：python2.7
+python版本：python3.7
 
 依赖库：pytorch,torchvision,[visdom](http://github.com/facebookresearch/visdom)，[pydensecrf](http://github.com/lucasb-eyer/pydensecrf)...
 
