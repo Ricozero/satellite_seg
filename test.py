@@ -19,7 +19,6 @@ from models import get_model
 import skimage
 from skimage import transform
 
-replace_background = False
 exclude_background = False
 
 def img_transform(img,input_size):
@@ -45,12 +44,12 @@ def process_batch(patches,model,labels_per_pixel_list,new_w):
     if(isinstance(outputs,tuple)):
         outputs = outputs[0]
 
+    # 预测结果已经是其他类型的概率很低
+    # 所以其实去不去除背景没区别
     if(exclude_background):
         pred = outputs.data[:,1:,:,:].max(1)[1].cpu().numpy() + 1
     else:
         pred = outputs.data.max(1)[1].cpu().numpy()
-    
-
 
     for i in range(len(patches[0])):
         x1 = patches[1][i][0]
@@ -63,13 +62,13 @@ def process_batch(patches,model,labels_per_pixel_list,new_w):
         else:
             resize_map = pred[i]
 
-
         for pix_inx in range(x1,x2):
             for pix_iny in  range(y1,y2):
                 location = pix_inx + pix_iny * new_w
                 pred_label = resize_map[pix_iny-y1][pix_inx-x1]
                 labels_per_pixel_list[location].append(pred_label)
-    return 
+    return
+
 def process_single_scale(args,model,crop_scale):
     #return a map for each scale
     batch_size = args.batch_size
@@ -117,12 +116,8 @@ def process_single_scale(args,model,crop_scale):
                 patches=[[],[]]
 
     for index in tqdm(list(range(new_w*new_h))):
-        most_count_label = np.argmax(np.bincount(labels_per_pixel_list[index]))
-        if(replace_background):
-            if(most_count_label==0):
-                most_count_label = 1 #plant
 
-        labels_per_pixel_list[index] = most_count_label
+        labels_per_pixel_list[index] = np.argmax(np.bincount(labels_per_pixel_list[index]))
 
     pred_labels=np.reshape(labels_per_pixel_list,(new_h,new_w))[:h,:w]
 
@@ -182,7 +177,6 @@ def test_large_img(args):
         for i in range(n_classes):
             print(i, class_iou[i])
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
     parser.add_argument('--model_path', nargs='?', type=str, default=None,
@@ -209,6 +203,5 @@ if __name__ == '__main__':
                         help='input_size of network')
     parser.add_argument('--tempdir',nargs='?', type=str, default='.',
                         help='temp results')
-
     args = parser.parse_args()
     test_large_img(args)
