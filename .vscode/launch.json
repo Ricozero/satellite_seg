@@ -1,0 +1,45 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "train",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/train.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--arch", "pspnet-densenet-s1s2",
+                "--img_rows", "256",
+                "--img_cols", "256",
+                "--n_epoch", "150",
+                "--l_rate", "1e-3",
+                "--batch_size", "32",
+                "--gpu", "0",
+                "--step", "50",
+                "--traindir", "dataset/stage1-stage2-train"]
+        },
+        {
+            "name": "test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/test.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--img_path", "dataset/1_small.png",
+                "--out_path", "results/pspnet-densenet-s1s2",
+                "--vis_out_path", "results/pspnet-densenet-s1s2/vis_1_small_pred.png",
+                "--gpu", "0",
+                "--batch_size", "8",
+                "--stride", "64",
+                "--model_path", "snapshot/pspnet-densenet-s1s2/1.pkl",
+                "--input_size", "256",
+                "--crop_scales", "192", "224", "256", "288", "320",
+                "--tempdir", "results/pspnet-densenet-s1s2/epoch1/temp"
+            ]
+
+        }
+    ]
+}
