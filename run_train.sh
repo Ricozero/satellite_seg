@@ -1,9 +1,14 @@
 #!/bin/bash
-#python -m visdom.server
+count=$(ps -ef | grep visdom | grep -v "grep" | wc -l)
+if [ ${count} -eq 0 ]; then
+    python -m visdom.server
+fi
 
 traindir="dataset/dstl-train"
 model_name=pspnet-densenet-dstl
 CUDA_VISIBLE_DEVICES=0
+
+echo "start training..."
 date
 python src/processing/train.py --arch ${model_name} \
 				--img_rows 256 \
@@ -17,3 +22,4 @@ python src/processing/train.py --arch ${model_name} \
 				#--snapshot snapshot/${model_name}/0.pkl \
 				#--split "trainval"
 date
+echo "training ended."

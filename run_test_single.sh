@@ -2,9 +2,11 @@
 img_name=1
 test_img=dataset/CCF-testing/${img_name}.png
 model_name=pspnet-densenet-dstl
-start_epoch=2
-end_epoch=2
-interval=1
+start_epoch=90
+end_epoch=150
+interval=20
+
+echo "start testing..."
 date
 for i in $(seq ${start_epoch} ${interval} ${end_epoch})
 do
@@ -24,8 +26,8 @@ do
 					--stride 64 \
 					--model_path $model \
 					--input_size 256 \
-					--crop_scales 192 224 256 \
+					--crop_scales 192 224 256 288 320 \
 					--tempdir ${save_dir}/temp
-	#wait
 done
 date
+echo "testing ended."

@@ -1,7 +1,6 @@
-*.png
-*.pkl
 *.pyc
 
 dataset
 results
+snapshot
 .vscode/.ropeproject

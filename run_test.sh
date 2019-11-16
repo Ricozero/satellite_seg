@@ -1,8 +1,11 @@
 #!/bin/bash
-model_name=pspnet-densenet-s1s2
+model_name=pspnet-densenet-dstl
 start_epoch=90
 end_epoch=150
 interval=20
+
+echo "start testing..."
+date
 for i in $(seq ${start_epoch} ${interval} ${end_epoch})
 do
 	model=snapshot/${model_name}/${i}.pkl
@@ -31,5 +34,6 @@ do
 						--crop_scales 192 224 256 288 320 \
 						--tempdir ${save_dir}/temp
 	done
-	wait
 done
+date
+echo "testing ended."
