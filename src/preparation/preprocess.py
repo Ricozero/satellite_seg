@@ -102,7 +102,7 @@ def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_
 			with warnings.catch_warnings():
 				warnings.simplefilter('ignore')
 				io.imsave(os.path.join(save_dir,'label',prefix+"_%05d.png"%(index)),patch_label)
-			save_visual_gt(os.path.join(save_dir,'visualize_gt'),patch_label,prefix,index)
+				save_visual_gt(os.path.join(save_dir,'visualize_gt'),patch_label,prefix,index)
 			index = index + 1
 		x0,x1,x2 = 0,0,0
 		y0 = y1 + stride_h

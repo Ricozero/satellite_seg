@@ -15,7 +15,8 @@ from utils.loss import focal_loss2d, bin_clsloss
 from utils.metrics import scores
 from torch.nn import DataParallel
 
-weights_per_class = torch.FloatTensor([0, 1, 1, 1, 1]).cuda()
+# TODO:这是干啥的？不预测出背景可能是这个原因！
+weights_per_class = torch.FloatTensor([1, 1, 1, 1, 1]).cuda()
 
 
 class AverageMeter(object):
@@ -134,6 +135,8 @@ def train(args):
 
     optimizer = torch.optim.SGD(
         model.parameters(), lr=args.l_rate, momentum=0.99, weight_decay=5e-4)
+
+    print(model)
 
     for epoch in range(args.n_epoch):
         adjust_learning_rate(optimizer, args.l_rate, epoch, args.step)

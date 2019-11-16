@@ -136,7 +136,7 @@ def generate_dstl():
     if not os.path.exists(train_folder):
         os.mkdir(train_folder)
     # TODO: 因为dstl训练集原图太小，320的crop size会造成小图有很多黑边，考虑调整
-    generate_dataset(train_folder, 320, img_list, label_list)
+    generate_dataset(train_folder, 256, img_list, label_list)
 
 preprocess_dstl()
 generate_dstl()
