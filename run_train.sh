@@ -1,12 +1,11 @@
 #!/bin/bash
 #python -m visdom.server
 
-traindir="dataset/stage1-stage2-train"
-#traindir="dataset/stage2-train"
-model_name=pspnet-densenet-s1s2
+traindir="dataset/dstl-train"
+model_name=pspnet-densenet-dstl
 CUDA_VISIBLE_DEVICES=0
 date
-python train.py --arch ${model_name} \
+python src/processing/train.py --arch ${model_name} \
 				--img_rows 256 \
 				--img_cols 256 \
 				--n_epoch 150 \

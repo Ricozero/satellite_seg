@@ -20,7 +20,7 @@ do
 			continue
 		fi
 		CUDA_VISIBLE_DEVICES=${gpuids[${index}]}
-		python test.py --img_path $test_img \
+		python src/processing/test.py --img_path $test_img \
 						--out_path ${save_dir}/test_${j}_pred.png \
 						--vis_out_path ${save_dir}/vis_test_${j}_pred.png \
 						--gpu 0 \
@@ -29,7 +29,7 @@ do
 						--model_path $model \
 						--input_size 256 \
 						--crop_scales 192 224 256 288 320 \
-						--tempdir ${save_dir}/temp &
+						--tempdir ${save_dir}/temp
 	done
 	wait
 done

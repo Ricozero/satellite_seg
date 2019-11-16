@@ -1,10 +1,10 @@
 #!/bin/bash
-img_name=Google_Level_19
-test_img=dataset/test/Google_Level_19.tif
-model_name=pspnet-densenet-s1s2
-start_epoch=90
-end_epoch=150
-interval=20
+img_name=1
+test_img=dataset/CCF-testing/${img_name}.png
+model_name=pspnet-densenet-dstl
+start_epoch=2
+end_epoch=2
+interval=1
 date
 for i in $(seq ${start_epoch} ${interval} ${end_epoch})
 do
@@ -16,7 +16,7 @@ do
 		echo file exists:${save_dir}/${img_name}_pred.png
 		break
 	fi
-	python test.py --img_path $test_img \
+	python src/processing/test.py --img_path $test_img \
 					--out_path ${save_dir}/${img_name}_pred.png \
 					--vis_out_path ${save_dir}/vis_${img_name}_pred.png \
 					--gpu 0 \
@@ -24,8 +24,8 @@ do
 					--stride 64 \
 					--model_path $model \
 					--input_size 256 \
-					--crop_scales 192 224 256 288 320 \
-					--tempdir ${save_dir}/temp &
-	wait
+					--crop_scales 192 224 256 \
+					--tempdir ${save_dir}/temp
+	#wait
 done
 date

@@ -15,7 +15,7 @@ do
 
 	vote_output="results/${model_name}/vote/test_${i}_pred.png"
 
-	python vote.py --inputs ${vote_inputs[@]} \
+	python src/processing/vote.py --inputs ${vote_inputs[@]} \
 					--output ${vote_output} &
 
 	unset inputlist
