@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "train",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/train.py",
+            "program": "${workspaceFolder}/src/processing/train.py",
             "console": "integratedTerminal",
             "args": [
                 "--arch", "pspnet-densenet-s1s2",
@@ -25,7 +32,7 @@
             "name": "test",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/test.py",
+            "program": "${workspaceFolder}/src/processing/test.py",
             "console": "integratedTerminal",
             "args": [
                 "--img_path", "dataset/1_small.png",
@@ -39,7 +46,6 @@
                 "--crop_scales", "192", "224", "256", "288", "320",
                 "--tempdir", "results/pspnet-densenet-s1s2/epoch1/temp"
             ]
-
         }
     ]
 }
