@@ -2,10 +2,6 @@
 
 ProjectDir=.
 
-echo "convert stage1 trainging dataset to stage2 format..."
-python utils/convert_s1_to_s2.py
-echo "convert label format done"
-
 echo "preprocess the training dataset with crf..."
 
 #stage2
