@@ -3,9 +3,11 @@ import skimage
 import skimage.io as io
 import pandas as pd
 from tqdm import tqdm
-from utils.preprocess import encode_segmap,segmap
 import sys,os
 import argparse
+
+sys.path.append('./src')
+from preparation.preprocess import encode_segmap,segmap
 
 def vote_per_image(args):
 	imgs=[]

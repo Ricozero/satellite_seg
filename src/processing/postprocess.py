@@ -2,8 +2,10 @@ from skimage import io
 from skimage import measure
 import numpy as np
 import json
+import sys
 
-from utils.preprocess import save_gt_vis
+sys.path.append('./src')
+from preparation.preprocess import save_gt_vis
 
 def label2edge(img, diffuse):
     '''

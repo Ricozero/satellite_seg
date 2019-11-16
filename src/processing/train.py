@@ -8,12 +8,14 @@ import os
 from torchvision import models
 from torch.autograd import Variable
 from torch.utils import data
+from torch.nn import DataParallel
+
+sys.path.append('./src')
 from models import get_model
 from utils.ccf_loader import CCFLoader
 from utils.loss import cross_entropy2d
 from utils.loss import focal_loss2d, bin_clsloss
 from utils.metrics import scores
-from torch.nn import DataParallel
 
 # TODO:这是干啥的？不预测出背景可能是这个原因！
 weights_per_class = torch.FloatTensor([1, 1, 1, 1, 1]).cuda()

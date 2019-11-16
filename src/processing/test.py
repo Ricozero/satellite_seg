@@ -7,17 +7,18 @@ from scipy import misc
 import imageio
 from torchvision import models
 import os
+from tqdm import tqdm
+import skimage
+from skimage import transform
 
 from torch.autograd import Variable
 from torch.utils import data
-from tqdm import tqdm
-from utils.metrics import scores
-from utils.preprocess import segmap
 from torch.nn import DataParallel
-from models import get_model
 
-import skimage
-from skimage import transform
+sys.path.append('./src')
+from models import get_model
+from utils.metrics import scores
+from preparation.preprocess import segmap
 
 exclude_background = False
 

@@ -3,8 +3,10 @@ import skimage
 import skimage.io as io
 import pandas as pd
 from tqdm import tqdm
-from utils.preprocess import encode_segmap,segmap
 import sys,os
+
+sys.path.append('./src')
+from preparation.preprocess import encode_segmap,segmap
 
 columns=["ret"]
 def load_predicted_label(ID,label_path):
