@@ -111,6 +111,7 @@ def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_
 def generate_trainval_list(pathdir):
 	labels_img_paths = os.listdir(os.path.join(pathdir,'label'))
 	labels_count_list=dict()
+	print('generating file list...')
 	for labels_img_path in tqdm(labels_img_paths):
 		label = io.imread(os.path.join(pathdir,'label',labels_img_path))
 		most_count_label= np.argmax(np.bincount(label.flatten().tolist()))

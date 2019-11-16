@@ -11,6 +11,9 @@ python src/preparation/inference.py ${train_dir2}/2.png ${train_dir2}/2_visual.p
 python src/preparation/inference.py ${train_dir2}/3.png ${train_dir2}/3_visual.png ${train_dir2}/3_visual_crf.png 0.95 5 &
 
 wait
-echo "generating dataset..."
-python src/processing/generate_data.py
+
+echo "generating ccf dataset..."
+python src/preparation/ccf.py
+echo "generating dstl dataset..."
+python src/preparation/dstl.py
 echo "Done"
