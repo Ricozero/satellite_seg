@@ -13,6 +13,7 @@ python版本：python3.7
 	* 复赛训练数据s2
 	* 初赛训练数据+复赛训练数据 s1s2
 	* 初赛训练数据+CRF处理复赛训练数据（是s1s2-crf2）
+	* [Dstl训练数据](https://www.kaggle.com/c/dstl-satellite-imagery-feature-detection/data)
 
 * 主要尝试的模型:
 

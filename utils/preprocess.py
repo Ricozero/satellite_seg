@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from collections import Counter
+import warnings
 
 ProjectDir="/root/satellite_seg"
 
@@ -73,7 +74,7 @@ def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_
 			y1 = y0
 			y2 = y1 +crop_size_h
 
-			print(x1,y1,x2,y2)
+			#print(x1,y1,x2,y2)
 
 			if(x2>w or y2>h):
 				x2 = min(x2,w)
@@ -98,7 +99,9 @@ def crop(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,crop_
 			x0 = x1 + stride_w
 
 			io.imsave(os.path.join(save_dir,'img',prefix+"_%05d.png"%(index)),patch)
-			io.imsave(os.path.join(save_dir,'label',prefix+"_%05d.png"%(index)),patch_label)
+			with warnings.catch_warnings():
+				warnings.simplefilter('ignore')
+				io.imsave(os.path.join(save_dir,'label',prefix+"_%05d.png"%(index)),patch_label)
 			save_visual_gt(os.path.join(save_dir,'visualize_gt'),patch_label,prefix,index)
 			index = index + 1
 		x0,x1,x2 = 0,0,0
