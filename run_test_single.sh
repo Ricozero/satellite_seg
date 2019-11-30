@@ -20,7 +20,7 @@ do
 	fi
 	python src/processing/test.py --img_path $test_img \
 					--out_path ${save_dir}/${img_name}_pred.png \
-					--vis_out_path ${save_dir}/vis_${img_name}_pred.png \
+					--vis_out_path ${save_dir}/${img_name}_pred_vis.png \
 					--gpu 0 \
 					--batch_size 8 \
 					--stride 64 \
