@@ -9,12 +9,12 @@ from skimage import io
 from tqdm import tqdm
 import warnings
 
-from preprocess import ProjectDir, convert_label_to_vis
+from preprocess import convert_label_to_vis
 from generate_data import generate_stat, generate_dataset
 
-dstl_folder = os.path.join(ProjectDir, 'dataset/dstl')
+dstl_folder = 'dataset/dstl'
 preprocessed_folder = os.path.join(dstl_folder, 'preprocessed')
-train_folder = os.path.join(ProjectDir, 'dataset/dstl-train')
+train_folder = 'dataset/dstl-train'
 
 # 原始分类到本项目的分类的映射
 type_projection = [

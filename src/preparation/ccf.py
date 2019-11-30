@@ -1,12 +1,11 @@
 import os
 import numpy as np
 
-from preprocess import ProjectDir
 from generate_data import generate_stat, generate_dataset
 from preprocess import convert_label_to_vis,convert_vis_to_label
 
-training_data_stage1_dir=os.path.join(ProjectDir,"dataset/CCF-training")
-training_data_stage2_dir=os.path.join(ProjectDir,"dataset/CCF-training-Semi")
+training_data_stage1_dir="dataset/CCF-training"
+training_data_stage2_dir="dataset/CCF-training-Semi"
 
 def generate_ccf():
     convert_label_to_vis(os.path.join(training_data_stage1_dir,'1_class.png'),os.path.join(training_data_stage1_dir,'1_class_vis.png'))
@@ -47,7 +46,7 @@ def generate_ccf():
     #dataset s2
     stat=generate_stat(label_list_2)
     print("dataset s2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
-    dataset_dir=os.path.join(ProjectDir,"dataset/stage2-train")
+    dataset_dir="dataset/stage2-train"
     if(not os.path.exists(dataset_dir)):
         os.mkdir(dataset_dir)
         generate_dataset(dataset_dir,320,img_list_2,label_list_2)
@@ -58,7 +57,7 @@ def generate_ccf():
     #dataset s1s2
     stat=generate_stat(label_list_1+label_list_2)
     print("stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
-    dataset_dir=os.path.join(ProjectDir,"dataset/stage1-stage2-train")
+    dataset_dir="dataset/stage1-stage2-train"
     if(not os.path.exists(dataset_dir)):
         os.mkdir(dataset_dir)
         print("create dataset s1s2...")
@@ -69,7 +68,7 @@ def generate_ccf():
     #dataset s1s2-crf
     stat=generate_stat(label_list_1+label_crf_list_2)
     print("crf2 stage1&stage2 rate: ",np.array(stat)*1.0/np.min(stat[np.nonzero(stat)]))
-    dataset_dir=os.path.join(ProjectDir,"dataset/stage1-stage2-train-crf2") #[4 4 6 1 1]
+    dataset_dir="dataset/stage1-stage2-train-crf2" #[4 4 6 1 1]
     if(not os.path.exists(dataset_dir)):
         os.mkdir(dataset_dir)
         print("create dataset s1s2-crf2...")

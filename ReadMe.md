@@ -30,8 +30,6 @@ python版本：python3.7
 
 # 数据预处理
 
-注：先修改`src/preparation/preprocess.py`中的工程目录变量`ProjectDir`
-
 * [CCF数据集下载链接](https://pan.baidu.com/s/1nu8srUh)（提取码：al0x）（把`BDCI2017-seg`的内容放入`dataset/`）
 * [Dstl数据集下载链接](https://www.kaggle.com/c/dstl-satellite-imagery-feature-detection/data)（解压放入`dataset/dstl`）
 
