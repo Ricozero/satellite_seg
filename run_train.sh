@@ -1,7 +1,9 @@
 #!/bin/bash
 count=$(ps -ef | grep visdom | grep -v "grep" | wc -l)
 if [ ${count} -eq 0 ]; then
-    python -m visdom.server
+	pushd ~
+	python -m visdom.server
+	pushd
 fi
 
 traindir="dataset/dstl-train"
