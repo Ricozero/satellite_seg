@@ -1,8 +1,18 @@
 #!/bin/bash
+
+# 使用的模型的名字
 model_name=pspnet-densenet-dstl
+
+# 使用第多少epoch的模型
 start_epoch=90
 end_epoch=150
 interval=20
+
+# 预测的图片，可以多个
+img_paths=dataset/Tairi_4cm_small1_down.png
+
+# 此次预测可见的GPUID
+CUDA_VISIBLE_DEVICES=0
 
 echo "Start testing..."
 date
@@ -12,21 +22,16 @@ do
 	save_dir=results/${model_name}/epoch${i}
 	mkdir -p ${save_dir}
 	mkdir -p ${save_dir}/temp
-	img_paths="dataset/Tairi_Google_20_small1.png
-		dataset/Tairi_4cm_small1_small.png
-		dataset/Tairi_2cm_small1_small.png"
 	for img_path in $img_paths
 	do
+		echo "Testing: $img_path"
 		file_name=$(basename $img_path)
 		# remove any suffix
 		img_name=${file_name%.*}
-		echo $img_name
 		if [ -f ${save_dir}/${img_name}_pred.png ] ;then
-			echo ${save_dir}/${img_name}_pred.png
-			echo "File exists: $img_path"
+			echo "File exists: ${save_dir}/${img_name}_pred.png"
 			continue
 		fi
-		echo "Testing $img_path"
 		python src/processing/test.py --img_path $img_path \
 						--out_path ${save_dir}/${img_name}_pred.png \
 						--vis_out_path ${save_dir}/${img_name}_pred_vis.png \

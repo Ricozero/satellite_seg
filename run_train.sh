@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# 先在家目录下启动visdom server
 count=$(ps -ef | grep visdom | grep -v "grep" | wc -l)
 if [ ${count} -eq 0 ]; then
 	pushd ~
@@ -6,11 +8,16 @@ if [ ${count} -eq 0 ]; then
 	pushd
 fi
 
-traindir="dataset/dstl-train"
+# 训练集目录
+traindir=dataset/dstl-train
+
+# 训练模型的名字
 model_name=pspnet-densenet-dstl
+
+# 此次训练可见的GPUID
 CUDA_VISIBLE_DEVICES=0
 
-echo "start training..."
+echo "Start training..."
 date
 python src/processing/train.py --arch ${model_name} \
 				--img_rows 256 \
@@ -24,4 +31,4 @@ python src/processing/train.py --arch ${model_name} \
 				#--snapshot snapshot/${model_name}/0.pkl \
 				#--split "trainval"
 date
-echo "training ended."
+echo "Training ended."
