@@ -87,19 +87,18 @@ def validate(model, valloader, n_class):
 
 
 def train(args):
-
-    # Setup TrainDataLoader
+    # Setup train DataLoader
     trainloader = CCFLoader(args.traindir, split=args.split,
                             is_transform=True, img_size=(args.img_rows, args.img_cols))
     n_classes = trainloader.n_classes
     TrainDataLoader = data.DataLoader(
-        trainloader, batch_size=args.batch_size, num_workers=0, shuffle=True)
+        trainloader, batch_size=args.batch_size, num_workers=4, shuffle=True)
 
-    # Setup for validate
+    # Setup validate DataLoader
     valloader = CCFLoader(args.traindir, split='val', is_transform=True, img_size=(
         args.img_rows, args.img_cols))
     VALDataLoader = data.DataLoader(
-        valloader, batch_size=4, num_workers=0, shuffle=False)
+        valloader, batch_size=4, num_workers=4, shuffle=False)
 
     # Setup visdom for visualization
     vis = visdom.Visdom()
@@ -117,6 +116,7 @@ def train(args):
                                        ylabel='ACC',
                                        title='Val ACC',
                                        legend=['ACC']))
+
     # Setup Model
     start_epoch = 0
     if(args.snapshot == None):

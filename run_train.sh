@@ -4,7 +4,7 @@
 count=$(ps -ef | grep visdom | grep -v "grep" | wc -l)
 if [ ${count} -eq 0 ]; then
 	pushd ~
-	python -m visdom.server
+	nohup python -m visdom.server &
 	pushd
 fi
 

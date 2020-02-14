@@ -45,8 +45,6 @@ def process_batch(patches,model,labels_per_pixel_list,new_w):
     if(isinstance(outputs,tuple)):
         outputs = outputs[0]
 
-    # 预测结果已经是其他类型的概率很低
-    # 所以其实去不去除背景没区别
     if(exclude_background):
         pred = outputs.data[:,1:,:,:].max(1)[1].cpu().numpy() + 1
     else:
@@ -142,6 +140,7 @@ def test_large_img(args):
     model.cuda()
     model.eval()
 
+    #TODO: 可以每个scale的预测都保存一次，合成预测结果在后来再加载，降低内存使用
     pred_labels_list=[]
     for crop_scale in args.crop_scales:
         pred_labels_single = process_single_scale(args,model,crop_scale)

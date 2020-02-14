@@ -139,7 +139,7 @@ def write_train_list(pathdir):
 	trainval_f.close()
 
 def save_gt_vis(input_path,output_path):
-	raw_img_class = io.imread(input_path,dtpe=np.uint8)
+	raw_img_class = io.imread(input_path)
 	color_mask = segmap(raw_img_class)
 	io.imsave(output_path,color_mask)
 
