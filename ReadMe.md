@@ -1,26 +1,25 @@
 # CCF BCDI2017 卫星影像的AI分类与识别 线上Top1部分代码
 
 # 运行环境
-python版本：python3.7
+Python版本：3.7
 
 主要依赖库：
-* pytorch
+* PyTorch
 * torchvision
 * [visdom](http://github.com/facebookresearch/visdom)
 * [pydensecrf](http://github.com/lucasb-eyer/pydensecrf)
 
-# Overview
+# 概述
 
 * DenseNet121为基础网络，PSPNet作为分割的模型，多尺度训练/测试，CRF后处理等
 
-* 训练数据集：
-	* 初赛训练数据s1
-	* 复赛训练数据s2
-	* 初赛训练数据+复赛训练数据 s1s2
-	* 初赛训练数据+CRF处理复赛训练数据（是s1s2-crf2）
+* 训练数据集:
+
+	* CCF初赛训练数据（s1）+ CCF复赛训练数据（s2）
+	* CRF处理CCF训练数据（s1s2-crf）
 	* Dstl训练数据
 
-* 主要尝试的模型:
+* 主要尝试的模型（原作者）:
 
 	* 训练数据集s1s2 (pspnet-densenet-s1s2)
 	* 训练数据集s1s2-crf2 (pspnet-densenet-s1s2-crf2)
@@ -31,6 +30,7 @@ python版本：python3.7
 # 数据预处理
 
 * [CCF数据集下载链接](https://pan.baidu.com/s/1nu8srUh)（提取码：al0x）（把`BDCI2017-seg`的内容放入`dataset/`）
+	* 注：有Semi表示复赛，无Semi表示初赛
 * [Dstl数据集下载链接](https://www.kaggle.com/c/dstl-satellite-imagery-feature-detection/data)（解压放入`dataset/dstl`）
 
 执行预处理：

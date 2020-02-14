@@ -1,17 +1,47 @@
 #!/bin/bash
 
-echo "preprocess the training dataset with crf..."
+DATASET=
+CRF=0
 
-#stage2
-train_dir=dataset/CCF-training-Semi
-python src/preparation/inference.py ${train_dir2}/1.png ${train_dir}/1_visual.png ${train_dir}/1_visual_crf.png 0.95 5 &
-python src/preparation/inference.py ${train_dir2}/2.png ${train_dir}/2_visual.png ${train_dir}/2_visual_crf.png 0.95 5 &
-python src/preparation/inference.py ${train_dir2}/3.png ${train_dir}/3_visual.png ${train_dir}/3_visual_crf.png 0.95 5 &
+if [ $# -lt 2 ];then
+    echo "Not enough arguments."
+    exit
+fi
 
-wait
+while [ -n "$1" ]
+do
+    case $1 in
+        -c | --use_crf)
+            CRF=1 ;;
+        -d | --dataset)
+            if [ $2 = ccf ];then
+                DATASET=ccf
+                shift
+            elif [ $2 = dstl ];then
+                DATASET=dstl
+                shift
+            else
+                echo $2: No such a dataset
+                exit
+            fi ;;
+        *)
+            echo $1: Unknown option
+            exit ;;
+    esac
+    shift
+done
 
-echo "generating ccf dataset..."
-python src/preparation/ccf.py
-echo "generating dstl dataset..."
-python src/preparation/dstl.py
-echo "Done"
+echo "Using dataset $DATASET."
+if [ $CRF -eq 1 ];then
+    echo "Using CRF."
+fi
+
+if [ $DATASET = ccf ];then
+    echo "Generating CCF dataset..."
+    python src/preparation/ccf.py $CRF
+elif [ $DATASET = dstl ];then
+    echo "Generating Dstl dataset..."
+    python src/preparation/dstl.py $CRF
+fi
+
+echo "Done."
