@@ -1,10 +1,19 @@
 #!/bin/bash
 
+# 脚本中多行字符串行尾若无"\"，回车会被当成空格
+HELP_TEXT="""
+参数：\n\
+-c, --use_crf 可选，使用CRF\n\
+-d, --dataset [crf|dstl] 必选，选择使用的数据集\n\
+-h, --help 显示此帮助\
+"""
+
 DATASET=
 CRF=0
 
 if [ $# -lt 2 ];then
-    echo "Not enough arguments."
+    echo "参数数量不足!"
+    echo -e $HELP_TEXT
     exit
 fi
 
@@ -24,6 +33,9 @@ do
                 echo $2: No such a dataset
                 exit
             fi ;;
+        -h | --help)
+            echo -e $HELP_TEXT
+            exit ;;
         *)
             echo $1: Unknown option
             exit ;;
