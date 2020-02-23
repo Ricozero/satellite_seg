@@ -18,7 +18,7 @@ from torch.nn import DataParallel
 sys.path.append('./src')
 from models import get_model
 from utils.metrics import scores
-from preparation.preprocess import segmap
+from utils.imgformat import segmap
 
 exclude_background = False
 

@@ -7,7 +7,7 @@ import sys,os
 import argparse
 
 sys.path.append('./src')
-from preparation.preprocess import encode_segmap,segmap
+from utils.imgformat import encode_segmap,segmap
 
 def vote_per_image(args):
 	imgs=[]

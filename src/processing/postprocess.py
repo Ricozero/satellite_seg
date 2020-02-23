@@ -5,7 +5,7 @@ import json
 import sys
 
 sys.path.append('./src')
-from preparation.preprocess import save_gt_vis
+from utils.imgformat import save_gt_vis
 
 def label2edge(img, diffuse):
     '''

@@ -6,7 +6,7 @@ from tqdm import tqdm
 import sys,os
 
 sys.path.append('./src')
-from preparation.preprocess import encode_segmap,segmap
+from utils.imgformat import encode_segmap,segmap
 
 columns=["ret"]
 def load_predicted_label(ID,label_path):

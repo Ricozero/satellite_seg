@@ -7,10 +7,11 @@ import numpy as np
 import cv2
 from skimage import io
 from tqdm import tqdm
-import warnings
 
-from preprocess import convert_label_to_vis
 from generate_data import generate_stat, generate_dataset
+
+sys.path.append('./src')
+from utils.imgformat import convert_label_to_vis
 
 dstl_folder = 'dataset/dstl'
 preprocessed_folder = os.path.join(dstl_folder, 'preprocessed')
@@ -105,9 +106,7 @@ def preprocess_dstl():
 
             # 输出3张图
             io.imsave(os.path.join(preprocessed_folder, img_id + '.png'), img_normal)
-            with warnings.catch_warnings():
-                warnings.simplefilter('ignore') # 消除low contrast image的UserWarning
-                io.imsave(os.path.join(preprocessed_folder, img_id + '_class.png'), img_mask)
+            io.imsave(os.path.join(preprocessed_folder, img_id + '_class.png'), img_mask, check_contrast=False)
             convert_label_to_vis(os.path.join(preprocessed_folder, img_id + '_class.png'),
                 os.path.join(preprocessed_folder, img_id + '_class_vis.png'))
             #io.imshow(img_normal)
