@@ -155,8 +155,7 @@ class CCFLoader(data.Dataset):
             return rgb
 
 if __name__ == '__main__':
-    local_path = '/home/rt/satellite_seg/dataset/stage1-stage2-train-crf'
-    dst = CCFLoader(local_path, is_transform=True)
+    dst = CCFLoader('./dataset/s1s2-train', is_transform=True)
     trainloader = data.DataLoader(dst, batch_size=1,shuffle=False)
     for i, data in enumerate(trainloader):
         imgs, labels = data

@@ -17,7 +17,6 @@ from utils.loss import cross_entropy2d
 from utils.loss import focal_loss2d, bin_clsloss
 from utils.metrics import scores
 
-# TODO:这是干啥的？不预测出背景可能是这个原因！
 weights_per_class = torch.FloatTensor([1, 1, 1, 1, 1]).cuda()
 
 
@@ -55,10 +54,10 @@ def adjust_learning_rate(optimizer, init_lr, epoch, step):
     lr = init_lr * (0.1 ** (epoch // step))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
-    print("epoch %d with learning rate: %f" % (epoch, lr))
 
 
 def validate(model, valloader, n_class):
+    import pdb;pdb.set_trace()
     losses = AverageMeter()
     model.eval()
     gts, preds = [], []
@@ -81,9 +80,7 @@ def validate(model, valloader, n_class):
             preds.append(pred_)
     score = scores(gts, preds, n_class=n_class)
 
-    for i in range(n_class):
-        print(i, score['Class Acc'][i])
-    return losses.avg, score['Overall Acc']
+    return losses.avg, score
 
 
 def train(args):
@@ -117,33 +114,33 @@ def train(args):
                                        title='Val ACC',
                                        legend=['ACC']))
 
-    # Setup Model
-    start_epoch = 0
+    # Setup model
     if(args.snapshot == None):
         model = get_model(args.arch, n_classes)
         model = DataParallel(model.cuda(args.gpu[0]), device_ids=args.gpu)
+        start_epoch = 0
     else:
         model = get_model(args.arch, n_classes)
         state_dict = torch.load(args.snapshot).state_dict()
         from collections import OrderedDict
         new_state_dict = OrderedDict()
-        for k, v in list(state_dict.items()):
-            name = k[7:]  # remove moudle
-            new_state_dict[name] = v
+        for key, value in list(state_dict.items()):
+            original_key = key[7:] # remove 'moudle.'
+            new_state_dict[original_key] = value
         model.load_state_dict(new_state_dict)
-        model = DataParallel(model.cuda(), device_ids=[
-                             i for i in range(len(args.gpu))])
+        model = DataParallel(model.cuda(), device_ids=[i for i in range(len(args.gpu))])
         start_epoch = int(os.path.basename(args.snapshot).split('.')[0])
 
-    optimizer = torch.optim.SGD(
-        model.parameters(), lr=args.l_rate, momentum=0.99, weight_decay=5e-4)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.l_rate, momentum=0.99, weight_decay=5e-4)
 
     print(model)
 
+    # Start training
     for epoch in range(args.n_epoch):
         adjust_learning_rate(optimizer, args.l_rate, epoch, args.step)
         if(epoch < start_epoch):
             continue
+        print("Epoch [%d/%d] learning rate: %f" % (epoch+1, args.n_epoch, optimizer.param_groups[0]['lr']))
         for i, (images, labels) in enumerate(TrainDataLoader):
             if torch.cuda.is_available():
                 images = Variable(images.cuda(args.gpu[0]))
@@ -159,8 +156,7 @@ def train(args):
             optimizer.zero_grad()
             outputs = model(images)
             if(isinstance(outputs, tuple)):
-                loss = cross_entropy2d(outputs[0], labels, weights_per_class)
-                + args.clsloss_weight * bin_clsloss(outputs[1], labels)
+                loss = cross_entropy2d(outputs[0], labels, weights_per_class) + args.clsloss_weight * bin_clsloss(outputs[1], labels)
             else:
                 #loss = cross_entropy2d(outputs, labels)
                 loss = cross_entropy2d(outputs, labels, weights_per_class)
@@ -175,14 +171,15 @@ def train(args):
                 win=loss_window,
                 update='append')
 
-        print("Epoch [%d/%d] iteration: %d with Loss: %.4f" %
-              (epoch+1, args.n_epoch, iter+1, loss))
+        print("Epoch [%d/%d] loss: %f" % (epoch+1, args.n_epoch, loss))
 
         # validation
-        loss, acc = validate(model, VALDataLoader, n_classes)
+        loss, score = validate(model, VALDataLoader, n_classes)
+        for i in range(n_classes):
+            print(i, score['Class Acc'][i])
         vis.line(
             X=torch.ones((1, 1)).cpu()*(epoch+1),
-            Y=torch.ones((1, 1)).cpu()*acc,
+            Y=torch.ones((1, 1)).cpu()*score['Overall Acc'],
             win=valacc_window,
             update='append')
 

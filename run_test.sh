@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # 使用的模型的名字
-model_name=pspnet-densenet-dstl
+model_name=pspnet-densenet-s1s2-crf
 
 # 使用第多少epoch的模型
-start_epoch=90
+start_epoch=150
 end_epoch=150
 interval=20
 
 # 预测的图片，可以多个
-img_paths=dataset/Tairi_4cm_small1_down.png
+img_paths="dataset/Tairi_4cm_small1_down.png
+dataset/Tairi_Google_20_small.png"
 
 # 此次预测可见的GPUID
 CUDA_VISIBLE_DEVICES=0
